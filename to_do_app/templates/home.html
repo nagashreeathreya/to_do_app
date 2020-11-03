@@ -1,0 +1,77 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Task</title>
+    <h2>Welcome {{user}}</h2>
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+  <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+</head>
+<body>
+
+<form action="/addtasks/" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="text" name="user" value="{{user}}" hidden>
+    <input type="submit" value="Add Task">
+    </form>
+<br/>
+<br>
+
+<form action="/viewtasks/" method="get">
+    {% csrf_token %}
+    <input type="submit" value="View Task">
+</form>
+<br/>
+<br/>
+<select id="filter_status">
+    <option>Filter by Status</option>
+    <option value="0">Completed</option>
+    <option value="1">Pending</option>
+</select>
+<br/>
+<br/>
+    <table border="1">
+        <tr>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Due Date</th>
+            <th>Status</th>
+
+        </tr>
+        {% for t in task %}
+            <tr>
+                <td>{{t.title}}</td>
+                <td>{{t.category}}</td>
+                <td>{{t.due_date}}</td>
+                <td>{{t.status}}</td>
+
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
+
+<script type="text/javascript">
+$(document).ready(function(){
+$(function(){
+    $('#id_due_date').datepicker()
+    });
+    });
+    $('#filter_status').change(function(){
+    cur_val = $('#filter_status').val()
+
+        $.ajax({
+            url: '/get_tasks',
+            data: {'status_id': cur_val},
+            type: 'GET',
+            dataType: 'json',
+            success: function(data){
+
+            
+
+            }
+        });
+    });
+</script>
